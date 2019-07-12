@@ -2,14 +2,14 @@
     <div class="whole">
         <div class="top-menu">
             <div class="avtor-box">
-                <el-dropdown>
+                <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
                      hello,树先生
                 <i class="el-icon-platform-eleme avtor"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>修改密码</el-dropdown-item>
-                    <el-dropdown-item>退出</el-dropdown-item>
+                    <el-dropdown-item command="editPsd">修改密码</el-dropdown-item>
+                    <el-dropdown-item command="layout">退出</el-dropdown-item>
                 </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -31,10 +31,6 @@
                         <el-menu-item index="2">
                             <i class="el-icon-menu"></i>
                             <span slot="title">导航二</span>
-                        </el-menu-item>
-                        <el-menu-item index="3" disabled>
-                            <i class="el-icon-document"></i>
-                            <span slot="title">导航三</span>
                         </el-menu-item>
                         <el-menu-item index="4">
                             <i class="el-icon-setting"></i>
@@ -64,11 +60,24 @@ export default {
         },
         selectMenu(index,path){
             console.log(index,path)
+        },
+        handleCommand(command){
+            console.log(command)
+            switch (command){
+                case 'editPsd':
+                    break;
+                case 'layout':
+                    this.$router.push({name:'login'});
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
 </script>
 <style lang="less" scoped>
+@topH:62px;
 .whole{
     width:100%;
     height:100%;
@@ -98,7 +107,7 @@ export default {
     .b-box{
         width:100%;
         margin-top:2px;
-        height:calc(100% - 62px);
+        height:calc(100% - @topH);
         display: flex;
         .left-menu{
             width:210px;

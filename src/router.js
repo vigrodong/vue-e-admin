@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import { LoadingBar } from 'iview';
 import login from './views/login/login.vue'
 import whole from './views/whole/whole.vue'
-
+Vue.component('LoadingBar',LoadingBar)
 Vue.use(Router)
 const wholeRouter = [
   {
@@ -31,6 +31,7 @@ const router =  new Router({
   ]
 })
 router.beforeEach((to, from, next) => {
+  LoadingBar.start();
   let mainRouters = wholeRouter.map(target=>target.name);
   let outRouters = mainRouter.map(target=>target.name)
   if(to.path =='/' || to.name =='whole'){
@@ -41,6 +42,9 @@ router.beforeEach((to, from, next) => {
   }else{
     next({name:'about'});
   }
+})
+router.afterEach((to, from)=>{
+  LoadingBar.finish();
 })
 
 export default router
