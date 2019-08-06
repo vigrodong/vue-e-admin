@@ -11,6 +11,36 @@ const wholeRouter = [
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
   },
+  {
+    path: '/area',
+    name: 'area',
+    component: () => import(/* webpackChunkName: "about" */ './views/userMana/areaMana/area.vue')
+  },
+  {
+    path: '/password',
+    name: 'password',
+    component: () => import(/* webpackChunkName: "about" */ './views/sysMana/password/password.vue')
+  },
+  {
+    path: '/eduinst',
+    name: 'eduinst',
+    component: () => import(/* webpackChunkName: "about" */ './views/userMana/eduMana/eduMana.vue')
+  },
+  {
+    path: '/school',
+    name: 'school',
+    component: () => import(/* webpackChunkName: "about" */ './views/userMana/schoolMana/schoolMana.vue')
+  },
+  {
+    path: '/index',
+    name: 'index',
+    component: () => import(/* webpackChunkName: "about" */ './views/userMana/index/index.vue')
+  },
+  {
+    path:'/collection',
+    name:'collection',
+    component: () => import(/* webpackChunkName: "about" */ './views/userMana/index/tables/collectionTable.vue')
+  }
 ]
 const mainRouter = [
   {

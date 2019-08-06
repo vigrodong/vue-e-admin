@@ -1,10 +1,11 @@
 <template>
     <div class="whole">
         <div class="top-menu">
+           <!-- <div style="position:absoulte;">江苏省义务教育优质均衡发展评估系统</div> -->
             <div class="avtor-box">
                 <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
-                     hello,树先生
+                     {{user.realName}}
                 <i class="el-icon-platform-eleme avtor"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -17,25 +18,17 @@
         </div>
         <div class="b-box">
             <div class="left-menu">
-                <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @select="selectMenu" :collapse="isCollapse">
-                    <el-submenu index="1">
+                <el-menu  class="el-menu-vertical-demo" @select="selectMenu" :collapse="isCollapse" :unique-opened="true">
+                 
+                    <el-submenu :index="String(item.url)" v-for="(item,index) in menus" :key='index'>
                         <template slot="title">
-                            <i class="el-icon-location"></i>
-                            <span slot="title">导航一</span>
+                            <i :class="[item.icon]"></i>
+                            <span slot="title">{{item.name}}</span>
                         </template>
                         <el-menu-item-group>
-                            <el-menu-item index="1-1">选项1</el-menu-item>
-                            <el-menu-item index="1-2">选项2</el-menu-item>
+                            <el-menu-item v-for="(it,ind) in item.childMenu" :index="String(it.url)" :key="ind">{{it.name}}</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                        <el-menu-item index="2">
-                            <i class="el-icon-menu"></i>
-                            <span slot="title">导航二</span>
-                        </el-menu-item>
-                        <el-menu-item index="4">
-                            <i class="el-icon-setting"></i>
-                            <span slot="title">导航四</span>
-                        </el-menu-item>
                 </el-menu>
             </div>
             <div class="view">
@@ -51,15 +44,26 @@ export default {
     name:'whole',
     data(){
         return {
-            isCollapse:false
+            isCollapse:false,
+            menus:[],
+            user:{},
         }
+    },
+    mounted(){
+        this.$api.getMenus().then(res=>{
+            this.menus = res.data;
+        }).catch(err=>{
+            console.log('222',err)
+        })
+        this.user = JSON.parse(localStorage.getItem('user')).data
     },
     methods:{
         handleOpen(index){
             console.log(index)
         },
         selectMenu(index,path){
-            console.log(index,path)
+            console.log(index)
+            this.$router.push({name:index})
         },
         handleCommand(command){
             console.log(command)
@@ -118,6 +122,7 @@ export default {
             flex:1;
              height:100%;
              width:100%;
+             overflow-y: scroll;
         }
     }
 }

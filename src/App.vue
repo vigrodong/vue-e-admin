@@ -3,6 +3,25 @@
     <router-view/>
   </div>
 </template>
+<script>
+export default {
+  mounted(){
+    let _this = this
+    let timer = null;
+    window.addEventListener('resize',function(){
+      clearTimeout(timer);
+      timer = setTimeout(()=>{
+      _this.$store.dispatch('setWH',{
+          width:window.innerWidth,
+          height:window.innerHeight
+        })
+      
+      },200)
+     
+    })
+  }
+}
+</script>
 
 <style lang="less">
 html,body{
