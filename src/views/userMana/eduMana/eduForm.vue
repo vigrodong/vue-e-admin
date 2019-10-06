@@ -25,6 +25,18 @@
                 </el-form-item>
             </el-col>
         </el-row>
+         <el-row>
+            <el-col :span="span">
+                <el-form-item label="联系人" prop="contact">
+                    <el-input v-model="form.contact" type="text"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24-span">
+                <el-form-item label="联系电话" prop="phone">
+                    <el-input v-model="form.phone" type="text"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
         <el-row>
             <el-col :span="span">
                 <el-form-item label="教育局类型">
@@ -85,7 +97,9 @@ const defaultForm = {
     cityId:'',
     countyId:'',
     passwd:'',
-    agaPsd:''
+    agaPsd:'',
+    contact:'',
+    phone:''
 }
 const rules = {
     code:[
@@ -109,6 +123,16 @@ const rules = {
         }
     ],
     city:[
+        {
+            required:true,
+        }
+    ],
+    contact:[
+        {
+            required:true,
+        }
+    ],
+    phone:[
         {
             required:true,
         }

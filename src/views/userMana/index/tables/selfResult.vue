@@ -9,20 +9,34 @@
             </tr>
             <tr v-for='(item,index) in tableList' :key="index">
                 <td>第{{index+1}}条</td>
-                <td><input type="text" class="text" v-model="item.level"></td>
-                <td><input type="text"  class="text" v-model="item.centent"></td>
+                <td>{{item.level}}</td>
+                <td>{{item.content}}</td>
             </tr>
             <tr>
-                <td>共计</td>
+                <td>合计</td>
                 <td colspan="2">
-
+                    特色鲜明/一般/无特色（三选一）
+                </td>
+            </tr>
+            <tr>
+                <td>合计</td>
+                <td colspan="2">
+                    {{totalA}}条A/
+                    {{totalB}}条B/
+                    {{totalB}}条C/
                 </td>
             </tr>
         </table>
+        <span style="display:inline-block;width:800px;">
+            注：1.根据实际情况按序号填写相应自评等级。
+            <br>
+            2.自评等级按照单项指标达标程度分达标（A），未完全达标（B）,不达标（C）三级。其中，13项指标达标程度仅分为达标（A），不达标（C）两级。
+            <br>
+            3.“达标（A）”是指该评估指标的所有评估要点达到评估细则中A级的标准要求；“未完全达标（B）”是指该评估指标的所有评估要点不完全符合评估细则中A级的标准要求；“未完全达标（B）”是指该评估指标的所有评估要点不完全符合评估细则中A级的标准要求又无C级所列任一一种情形，“不达标（C）”指该评估指标的所有评估要点中存在C级所列情形。
+            <br>
+            4.35条评估指标的评估要点确定，标准要求及内涵剖析参见《江苏省义务教育优质均衡发展县（市，区）评估细则》及《江苏省义务教育优质均衡发展县（市，区）评估指标内涵解读》。
+        </span>
         <div class="flex-center">
-             <el-button type="primary" @click="addCol">添加新行</el-button>
-             <el-button type="danger" @click="deleteCol">删除新行</el-button>
-             <el-button type="primary" plain @click='submit'>提交</el-button>
         </div>
         
     </div>
@@ -30,27 +44,62 @@
 <script>
 export default {
     name:'selfResult',
+    props:['tableHeader'],
     data(){
         return {
-            tableList:new Array(30).fill('').map(target=>{
-                return {
-                    level:'',
-                    centent:''
-                }
-            })
+            tableList:[],
+            totalA:0,
+            totalB:0,
+            totalC:0,
         }
     },
     methods:{
-        addCol(){
-            this.tableList.push({
-                level:'',
-                centent:''
-            })
-        },
-        deleteCol(){
-            this.tableList.pop(); 
-        },
-        submit(){}
+        
+    },
+    watch:{
+       tableHeader:{
+           handler:function(){
+               if(this.tableHeader!=null){
+                    this.tableList = this.tableHeader.map(target=>{
+                        return {
+                            id:target.id,
+                            level:'',
+                            content:''
+                        }
+                    })
+                    this.$api.eduinstIndexList({eduinstId:JSON.parse(localStorage.getItem('user')).data.eduinstId}).then(res=>{
+                        console.log(333,res)
+                        this.tableList.forEach(target=>{
+                            res.data.eduinstApgVoList.some(tar=>{
+                                if(tar.indexId ==target.id){
+                                    target.content = '主要实践和成效:'+tar.achievement +'主要不足和问题:'+tar.problem+'改进措施和目标'+tar.goal
+                                    return true
+                                }
+                            })
+                            res.data.eduinstIndexPoList.some(tar=>{
+                                if(tar.indexId ==target.id){
+                                    target.level = tar.content
+                                    if(tar.content =='A'){
+                                        this.totalA++
+                                    }
+                                    if(tar.content =='B'){
+                                        this.totalB++
+                                    }
+                                    if(tar.content =='C'){
+                                        this.totalC++
+                                    }
+                                    return true
+                                }
+                            })
+                        })
+                    })
+               }
+           },
+           deep:true
+       }, 
+    },
+    mounted(){
+
     }
 }
 </script>
@@ -68,13 +117,13 @@ export default {
          tr {background: #fff;font-size: 12px;color: #0a0a0a;}  
          td{width:200px;line-height:20px;text-align: center;height:40px;border: 1px solid #070707;}  
          .t1{
-             width:160px;
+             width:225px;
          } 
          .t2{
-             width:160px;
+             width:225px;
          }   
          .t3{
-             width:320px;
+             width:400px;
          }       
     }
     .text{

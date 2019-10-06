@@ -74,11 +74,31 @@
                     </el-col>
                 </el-row>
             </div>
+            <div class="item-box">
+                <el-row>
+                    <el-col :span="12">
+                      <el-upload
+                        class="upload-demo"
+                        action="/api/import/importSchool"
+                        :on-success="handlerUploadSuccess"
+                        :show-file-list="false"
+                        :before-upload='beforeUpload'
+                        >
+                        <el-button  type="primary">学校导入</el-button>
+                    </el-upload>   
+                    </el-col>
+                    <el-col :span="12">
+                         <span style='cursor:pointer;color:#1585FF;' type="primary" @click='download'>模版下载</span>
+                      <!-- <a target='_blank' @click='download' style="cursor:pointer;">模版下载</a> -->
+                    </el-col>
+                </el-row>
+            </div>
         </div>
          <div class="table" :style="{width:tableWidth+'px'}">
               <el-table
                 :data="tableData"
                 border
+                 v-loading="loading"
                 style="width: 100%">
                 <el-table-column
                 prop="name"
@@ -95,6 +115,12 @@
                 <el-table-column
                 prop="runByName"
                 label="学校所属"
+                align='center'
+                >
+                </el-table-column>
+                <el-table-column
+                prop="xq"
+                label="校区"
                 align='center'
                 >
                 </el-table-column>
@@ -120,7 +146,8 @@
                 <el-pagination
                 background
                 layout="prev, pager, next"
-                :total="total">
+                :total="total"
+                @current-change='goPage'>
             </el-pagination>
             </div>
          </div>
@@ -156,7 +183,8 @@ export default {
             options1:[],
             options2:[],
             options3:[],
-            dialogVisible:false
+            dialogVisible:false,
+            loading:false
         }
     },
     computed:{
@@ -172,10 +200,24 @@ export default {
        } 
     },
     methods:{
+        download(){
+            window.open('/school.xlsx','_blank')
+        },
+        handlerUploadSuccess(){
+            this.loading = false
+            this.getSchoolList();
+        },
+        beforeUpload(){
+            this.loading = true
+        },
         init(){
             this.getSchoolList();
             this.getSchoolType();
             this.getCityList();
+        },
+        goPage(page){
+            this.pageNum = page
+            this.getSchoolList();
         },
         getSchoolType(){
             this.$api.getSchoolType().then(res=>{
@@ -218,6 +260,7 @@ export default {
             })
         },
         getSchoolList(){
+            this.loading = true
             let params = {
                 code:this.code,
                 pageSize:this.pageSize,
@@ -226,8 +269,10 @@ export default {
                 type:this.type,
                 cityId:this.cityId,
                 countyId:this.countyId,
+                eduinstId:JSON.parse(localStorage.getItem('user')).data.eduinstId
             }
             this.$api.getSchoolList(params).then(res=>{
+                this.loading = false
                 this.tableData = res.data.data;
                 this.pageNum = res.data.pageNum;
                 this.pageSize = res.data.pageSize;

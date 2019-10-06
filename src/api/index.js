@@ -2,13 +2,14 @@ const axios = require('axios');
 import qs from 'qs'
 import { Message } from 'element-ui';
 // export const baseURL = 'http://58.192.73.16:8080/yzjh'
-
-export const baseURL = 'http://10.20.31.184:8081/yzjh'
+// export const baseURL = 'http://10.108.3.124:8080/yzjh'
+export const baseURL = 'http://10.20.31.184:8085/yzjh'
+// export const baseURL = '/api'
 
 const instance = axios.create({
     baseURL: baseURL,
     // baseURL: '/api',
-    timeout: 10000,
+    timeout: 300000,
 });
 
 /*
@@ -150,6 +151,10 @@ export default {
     indexTable(params){
         return fetch('/index/table',params,'get')
     },
+    //schoolCollection/schoolStagePage
+    getSchoolStagePage(params){
+        return fetch('/schoolCollection/schoolStagePage',params,'get')
+    },
     //获取采集项
     collectionList(params){
         return fetch('/collection/list',params,'get')
@@ -171,6 +176,35 @@ export default {
     },
     eduinstIndexList(params){
         return fetch('/eduinstIndex/list',params,'get')
-    }
+    },
     
+    getMenuindexList(params){
+        return fetch('/index/menuIndexList',params,'get')
+    },
+    //eduinstIndex/submit
+    collectionSubmit(params){
+        return fetch('/eduinstIndex/submit',params,)
+    },
+    sjxgCreate(params){
+        return fetch('/eduinstIndex/sjxgCreate',params,)
+    },
+    sjxgQuery(params){
+        return fetch('/eduinstIndex/sjxgQuery',params,'get')
+    },
+    tscxCreate(params){
+        return fetch('/eduinstIndex/tscxCreate',params,)
+    },
+    tscxQuery(params){
+        return fetch('/eduinstIndex/tscxQuery',params,'get')
+    },
+    ghCreate(params){
+        return fetch('/eduinstIndex/ghCreate',params,)
+    },
+    ghQuery(params){
+        return fetch('/eduinstIndex/ghQuery',params,'get')
+    },
+    getProcess(params){
+        return fetch('/eduinstIndex/process',params,'get')
+    },
+
 }

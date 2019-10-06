@@ -96,6 +96,38 @@
                      </el-form-item>
                 </el-col>
             </el-row>
+            <el-row>
+                <el-col :span="span">
+                    <el-form-item label="小学段学生数" prop='studentCountP'>
+                        <el-input v-model="form.studentCountP" 
+                        :disabled="!(form.type == 500020 || form.type == 500021 || form.type == 500024 || form.type == 500026)"
+                        ></el-input>
+                     </el-form-item>
+                </el-col>
+                <el-col :span="24-span">
+                    <el-form-item label="初中段学生数" prop='studentCountM'>
+                        <el-input v-model="form.studentCountM" 
+                         :disabled="!(form.type == 500022 || form.type == 500024 || form.type == 500026 || form.type == 500042)"
+                       
+                        ></el-input>
+                     </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="span">
+                    <el-form-item label="高中段学生数" prop='studentCountH'>
+                        <el-input v-model="form.studentCountH" 
+                        :disabled="!(form.type == 500024 || form.type == 500022)"
+                        ></el-input>
+                     </el-form-item>
+                </el-col>
+                <el-col :span="24-span">
+                   <el-form-item label="学区" prop='xq'>
+                        <el-input v-model="form.xq" 
+                        ></el-input>
+                     </el-form-item>
+                </el-col>
+            </el-row>
         </el-form>
          <div class="flex-center">
             <el-button type="primary" @click="save">保存</el-button>
@@ -114,7 +146,11 @@ const defaultForm = {
     "name": "",
     "runBy": "",
     "studentCount": '',
-    "type": ''
+    "studentCountP": '',
+    "studentCountM": '',
+    "studentCountH": '',
+    "type": '',
+    "xq":''
 }
 export default {
     name:'schoolForm',
@@ -128,7 +164,26 @@ export default {
             let params = {
                 ...this.form
             }
-            this.$api[api](params).then(res=>{
+            let obj ={
+                "cityId": params.cityId,
+                "classCount": params.classCount,
+                "code": params.code,
+                "countyId": params.countyId,
+                "eduinstId": params.eduinstId,
+                "gradeCount": params.gradeCount,
+                "name": params.name,
+                "runBy": params.runBy,
+                "studentCount": params.studentCount,
+                "studentCountP": params.studentCountP,
+                "studentCountM": params.studentCountM,
+                "studentCountH": params.studentCountH,
+                "type": params.type,
+                "xq": params.xq
+            }
+            if(this.type !='add'){
+                obj.id = params.id
+            }
+            this.$api[api](obj).then(res=>{
                 this.$message.success(res.msg)
                 this.$emit('success')
                 this.$emit('close')
@@ -181,6 +236,13 @@ export default {
         this.getCityList();
         this.getSchoolType();
         this.getEduinstList();
+        let user = JSON.parse(localStorage.getItem('user'))
+        this.$nextTick(()=>{
+             this.form = {
+            ...this.form,
+            ...user.data
+        } 
+        })
     },
     data(){
         return {
@@ -206,6 +268,7 @@ export default {
                 gradeCount:[{ required: true,}],
                 classCount:[{ required: true,}],
                 studentCount:[{ required: true,}],
+                xq:[{ required: true,}],
             }
         }
     }

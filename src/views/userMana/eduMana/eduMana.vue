@@ -76,10 +76,7 @@
             </div>
             <div class="item-box">
                 <el-row>
-                    <el-col :span="0">
-                       &nbsp;
-                    </el-col>
-                    <el-col :span="24">
+                    <el-col :span="12">
                       <el-upload
                         class="upload-demo"
                         action="/api/import/importEduinstlUser"
@@ -88,7 +85,10 @@
                         :before-upload='beforeUpload'
                         >
                         <el-button  type="primary">教育局导入</el-button>
-                    </el-upload>   
+                    </el-upload> 
+                    </el-col>
+                    <el-col :span="12">
+                      <span class='link' @click='download'>模版下载</span>  
                     </el-col>
                 </el-row>
             </div>
@@ -99,6 +99,7 @@
             :data="tableData"
             border
             class="table-item"
+             v-loading="loading"
             >
             <el-table-column
             prop="code"
@@ -150,7 +151,9 @@
             <el-pagination
             background
             layout="prev, pager, next"
-            :total="total">
+            :total="total"
+            @current-change='goPage'
+            >
             </el-pagination>
         </div>
         
@@ -193,6 +196,7 @@ export default {
             options3: [],
             dialogVisible:false,
             title:'',
+            loading:false,
         }
     },
     watch:{
@@ -207,6 +211,9 @@ export default {
         this.init()
     },
     methods:{
+        download(){
+            window.open('/edu.xlsx','_blank')
+        },
         beforeUpload(){
             this.load = this.$loading({
                 lock: true,
@@ -214,6 +221,9 @@ export default {
                 spinner: 'el-icon-loading',
                 background: 'rgba(0, 0, 0, 0.7)'
                 });
+        },
+        goPage(page){
+            this.pageNum = page;
             this.getEduList();
         },
         init(){
@@ -260,6 +270,7 @@ export default {
             })
         },
         getEduList(){
+            this.loading = true
             let params = {
                pageNum:this.pageNum,
                pageSize:this.pageSize,
@@ -271,6 +282,7 @@ export default {
             }
             this.$api.getEduList(params).then(res=>{
                 console.log(res)
+                this.loading = false
                 this.total = res.data.total
                 this.tableData  = res.data.data
             })
@@ -279,6 +291,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.link{
+    cursor: pointer;
+    color:#3794FF;
+}
 .clear{
     clear: both;
 }

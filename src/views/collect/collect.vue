@@ -1,48 +1,43 @@
 <template>
-    <div class="container">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="义务教育优质均衡发展县（市、区）基本情况" name="first" style='margin-bottom:40px;'>
-                <base1></base1> 
-            </el-tab-pane>
-            <el-tab-pane label="自评报告" name="second" style='margin-bottom:40px;'>
-                <self></self>
-            </el-tab-pane>
-            <!-- <el-tab-pane label="评估指标自评结果" name="third" style='margin-bottom:40px;'>
-                <selfResult :tableHeader='tableData'></selfResult>
-            </el-tab-pane> -->
-        </el-tabs>
-        
-        
-        
-        <!-- <div v-for='(item,index) in tableData' :key='index'>
-            <one v-for='(ite,inde) in item.children' :key='inde' :params='ite' :orign='item' :Index="inde"></one>
-        </div> -->
-        <!-- <one v-for='(item,index) in tableData' :key='index' :params='item' :allData='allData' :tableHeader='tableHeader' :oneData = 'oneData' :Index='index'></one> -->
+    <div class='flex-center' v-loading='loading'>
+        <one :params='params' :allData='allData' :tableHeader='tableHeader' :oneData='oneData' :Index='params.Index' :rank='rank'></one>
     </div>
 </template>
 <script>
-import base1 from './tables/base1'
-import self from './tables/self'
-import selfResult from './tables/selfResult'
-import one from './tables/one'
-import collections from './tables/collectionTable'
+import one from '@/views/userMana/index/tables/one'
 export default {
-    name:'index',
+    name:'collect',
     data(){
         return {
             tableData:[],
             allData:null,
             tableHeader:null,
             oneData:null,
-            activeName: 'first'
+            params:{},
+            loading:false,
         }
     },
-    mounted(){
-        this.resData();
+    computed:{
+        id(){
+            return this.$route.query.id
+        },
+        rank(){
+            return this.$route.query.rank
+        }
+    },
+    watch:{
+        id(){
+            this.init()
+            window.scrollTo(0,0)
+        }
+    },
+    components:{
+        one
     },
     methods:{
-        resData(){
-            this.$api.indexTable().then(res=>{
+        init(){
+            this.loading = true
+             this.$api.indexTable().then(res=>{
                 let data = res.data
                 let type1 = data.filter(target=>{
                     return target.type == 1
@@ -55,6 +50,7 @@ export default {
                 }).map(target=>{
                     target.children3 = [];
                     target.children4 = [];
+                    target.type6 = [];
                     return target;
                 });
                 let type3 = data.filter(target=>{
@@ -118,11 +114,17 @@ export default {
                 type6.forEach(target=>{
                     type2.some(tar=>{
                         if(tar.id == target.parentId){
-                            tar.type6 = target
+                            tar.type6.push(target)
                         }
                     })
                 })
                 this.tableData = type
+                type.some(target=>{
+                    if(target.id == this.$route.query.id){
+                        this.params = target
+                        return true;
+                    }
+                })
                 this.$nextTick(()=>{
                     this.$api.eduinstIndexList({eduinstId:JSON.parse(localStorage.getItem('user')).data.eduinstId}).then(res=>{
                        
@@ -136,24 +138,18 @@ export default {
                         this.oneData  = res.data
                     })
                 })
+                this.loading = false
             })
         }
     },
-    components:{
-        base1,
-        self,
-        selfResult,
-        one,
-        collections
-    }
+    mounted(){
+        this.init()
+    },
 }
 </script>
 <style lang="less" scoped>
-.container{
+.flex-center{
     display: flex;
-    align-items: center;
-    flex-direction: column;
+    justify-content: center;
 }
 </style>
-
-

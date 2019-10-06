@@ -34,7 +34,7 @@
                     </div> 
             </div>
         </div>
-        <el-button type="primary" plain @click='submit'>提交</el-button>
+        <el-button type="primary" plain @click='submit'>确认保存</el-button>
     </div>
 </template>
 <script>
@@ -97,6 +97,7 @@ export default {
                     type:'success',
                     message:res.msg
                 })
+                this.$router.go(0)
             })
         }
     }
@@ -122,16 +123,17 @@ textarea{
     font-size:14px;
     
     .top{
-        width:600px;
+        width:850px;
         height:500px;
         border: 1px solid #747474;
         position: relative;
         .area{
             display: inline-block;
             margin: 0 0 0 3px;
-            width:590px;
+            width:840px;
             height:370px;
             border:none;
+            outline: none;
         }
         .t1{
             width:100%;
@@ -160,17 +162,17 @@ textarea{
            border-left: 1px solid #747474; 
            border-right: 1px solid #747474; 
            border-bottom: 1px solid #747474; 
-           width:100px;
-           height:200px;
+           width:211px;
+           height:300px;
            writing-mode:tb-rl;
            text-align: center;
-           line-height: 100px;
+           line-height: 211px;
         }
         .right{
            border-right: 1px solid #747474; 
            border-bottom: 1px solid #747474; 
-           width:499px;
-           height:200px; 
+           width:639px;
+           height:300px; 
            position: relative;
            .r{
                width:100%;
@@ -192,9 +194,10 @@ textarea{
                bottom: 0px;
            }
            .area1{
-               width:496px;
+               width:596px;
                border:none;
-               height:120px;
+               outline:none;
+               height:220px;
            }
         }
     }

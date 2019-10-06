@@ -40,6 +40,35 @@ const wholeRouter = [
     path:'/collection',
     name:'collection',
     component: () => import(/* webpackChunkName: "about" */ './views/userMana/index/tables/collectionTable.vue')
+  },
+  {
+    path:'/collect',
+    name:'collect',
+    component: () => import(/* webpackChunkName: "about" */ './views/collect/collect.vue')
+  },
+  {
+    path:'/ts',
+    name:'ts',
+    component: () => import(/* webpackChunkName: "about" */ './views/collect/ts.vue')
+  
+  },
+  {
+    path:'/gh',
+    name:'gh',
+    component: () => import(/* webpackChunkName: "about" */ './views/collect/gh.vue')
+  
+  },
+  {
+    path:'/sj',
+    name:'sj',
+    component: () => import(/* webpackChunkName: "about" */ './views/collect/sj.vue')
+  
+  },
+  {
+    path:'/process',
+    name:'process',
+    component: () => import(/* webpackChunkName: "about" */ './views/collect/process.vue')
+  
   }
 ]
 const mainRouter = [
